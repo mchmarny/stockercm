@@ -1,0 +1,15 @@
+#!/bin/bash
+
+declare -r SOURCE_TOPIC_NAME="stocker-source"
+declare -r TARGET_TOPIC_NAME="stocker-processed"
+
+F_VARS="PID=${GCP_PROJECT},TARGET_TOPIC=${TARGET_TOPIC_NAME}"
+
+gcloud alpha functions deploy stocker-process \
+  --entry-point ProcessorSentiment \
+  --set-env-vars $F_VARS \
+  --memory 256MB \
+  --region us-central1 \
+  --runtime go112 \
+  --trigger-topic $SOURCE_TOPIC_NAME \
+  --timeout=300s
