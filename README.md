@@ -1,0 +1,2 @@
+# stockercm
+Stock sentiment processor
