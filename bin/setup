@@ -1,8 +1,13 @@
 #!/bin/bash
 
-declare -r SOURCE_TOPIC_NAME="stocker-source"
-declare -r TARGET_TOPIC_NAME="stocker-processed"
 
 echo "Creating pubsub topics..."
-gcloud beta pubsub topics create ${SOURCE_TOPIC_NAME}
-gcloud beta pubsub topics create ${TARGET_TOPIC_NAME}
+gcloud pubsub topics create stocker-source
+gcloud pubsub topics create stocker-processed
+
+
+echo "Creating dataflow job to drain processed topic to bigquery..."
+gcloud beta dataflow jobs run stocker-processed-to-bq-pump \
+  --gcs-location gs://dataflow-templates/pubsub-to-bigquery/template_file \
+  --parameters="topic=projects/${GCP_PROJECT}/topics/stocker-processed","table=${GCP_PROJECT}:stocker.content" \
+  --region "us-central1"

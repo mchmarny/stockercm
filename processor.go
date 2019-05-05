@@ -15,8 +15,8 @@ import (
 
 var (
 	logger    = log.New(os.Stdout, "[SENTIMENT] ", 0)
-	projectID = os.Getenv("PID")
-	topicName = os.Getenv("TARGET_TOPIC")
+	projectID = mustEnvVar("PID", "")
+	topicName = mustEnvVar("TARGET_TOPIC", "stocker-processed")
 
 	once        sync.Once
 	langClient  *lang.Client
@@ -60,7 +60,7 @@ func ProcessorSentiment(ctx context.Context, m PubSubMessage) error {
 		}
 
 		// Creates the new topic.
-		top, err := pc.CreateTopic(ctx, topicName)
+		top := pc.Topic(topicName)
 		if err != nil {
 			logger.Fatalf("Error creating pubsub topic: %v", err)
 		}
@@ -113,4 +113,17 @@ func scoreSentiment(ctx context.Context, c *TextContent) error {
 	c.Score = result.DocumentSentiment.Score
 
 	return nil
+}
+
+func mustEnvVar(key, fallbackValue string) string {
+
+	if val, ok := os.LookupEnv(key); ok {
+		return val
+	}
+
+	if fallbackValue == "" {
+		logger.Fatalf("Required envvar not set: %s", key)
+	}
+
+	return fallbackValue
 }
