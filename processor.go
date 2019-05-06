@@ -39,6 +39,7 @@ type TextContent struct {
 	Content   string    `json:"content"`
 	Magnitude float32   `json:"magnitude"`
 	Score     float32   `json:"score"`
+	IsRetweet bool      `json:"retweet"`
 }
 
 // ProcessorSentiment processes pubsub topic events
