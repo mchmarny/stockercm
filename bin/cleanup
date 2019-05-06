@@ -1,3 +1,4 @@
 #!/bin/bash
 
 gcloud functions delete stocker-process --region us-central1
+
