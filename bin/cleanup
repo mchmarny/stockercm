@@ -2,3 +2,4 @@
 
 gcloud functions delete stocker-process --region us-central1
 
+gcloud dataflow jobs cancel stocker-processed-to-bq-pump --region "us-central1"
