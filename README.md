@@ -11,6 +11,25 @@ gcloud pubsub topics create stocker-source
 gcloud pubsub topics create stocker-processed
 ```
 
+Creating BigQuery content table
+
+```shell
+bq mk stocker
+bq query --use_legacy_sql=false "
+  CREATE OR REPLACE TABLE stocker.content (
+    symbol STRING NOT NULL,
+    cid STRING NOT NULL,
+    created TIMESTAMP NOT NULL,
+    author STRING NOT NULL,
+    lang STRING NOT NULL,
+    source STRING NOT NULL,
+    content STRING NOT NULL,
+    magnitude FLOAT64 NOT NULL,
+    score FLOAT64 NOT NULL,
+    retweet BOOL NOT NULL
+)"
+```
+
 Create Cloud Dataflow job to drain processed topic to BigQuery
 
 ```shell
